@@ -1,0 +1,75 @@
+:root{
+    --background-color: #77BEF0;
+    --border-color: #FFCB61;
+    --heading-color: white;
+    --color-red: #EA5B6F;
+}
+
+body{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-color);
+}
+
+/* ---------------------------------------------- */
+
+.title{
+    color: var(--heading-color);
+    text-align: center;
+}
+
+/* ---------------------------------------------- */
+
+.game{
+    display: flex;
+    flex-direction: row;
+    gap:100px
+}
+
+.game button{
+    color:var(--heading-color);
+    font-size: large;
+    background-color: #217bcf;
+    border-color: var(--border-color);
+    border-radius: 10px;;
+    border-width: 4px;
+}
+
+.game h2{
+    color:var(--heading-color);
+    border-radius: 10px;
+    
+}
+
+/* ---------------------------------------------- */
+.h-container, .c-container{
+    display: flex;
+    gap: 20px;
+}
+
+
+.h-container img, .c-container img{
+    width:150px;
+    border-style: solid;
+    padding: 20px;
+    border-radius: 10px;
+    border-color: var(--border-color);
+    border-width: 10px;
+}
+
+/* #winner-announce{
+   
+} */
+
+.h-container img:hover{
+border-color : var(--color-red);
+}
+
+.h-container img:active{
+    border-color: green;
+}
+
+/* ---------------------------------------------- */
+

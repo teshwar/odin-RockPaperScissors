@@ -15,7 +15,7 @@ function getComputerChoice(){
 
 //function to get human choice
 function getHumanChoice(){
-    let choice = prompt("Please input a choice: rock, paper, or scissors");
+    
     choice = choice.toLowerCase()
 
     if ((choice == "rock") || (choice == "paper") || (choice == "scissors")){
@@ -59,6 +59,7 @@ function playGame(){
 
         if (winner == "c"){
             computerScore += 1;
+           
         } else if (winner == "h"){
             humanScore += 1;
         } else {
@@ -71,6 +72,12 @@ function playGame(){
 
 }
 
+
+const startButton = document.querySelector('.game ');
+
+startButton.addEventListener('click', () => {
+    alert("Game is about to start, this is a best of 5! \nPlease click on the image to make your choice");
+});
 
 
 playGame();
