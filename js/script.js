@@ -1,83 +1,152 @@
-// function to get computer choice
-function getComputerChoice(){
-    //Return random number from 0,1,2
-    let number  = Math.floor(Math.random() * 3);
+//COMPUTER LOGIC
+// Function to get computer choice
 
-    switch(number){
-        case 0:
-            return "rock";
-        case 1:
-            return "paper";
-        case 2:
-            return "scissors";
-    }
+// Get all computer choice images
+const computerChoiceImages = document.querySelectorAll(".c-container img");
+
+// This function removes the 'selected' class from all computer images
+function clearComputerSelection() {
+  computerChoiceImages.forEach((img) => {
+    img.classList.remove("selected");
+  });
 }
 
-//function to get human choice
-function getHumanChoice(){
-    
-    choice = choice.toLowerCase()
+function getComputerChoice() {
+  const choices = ["rock", "paper", "scissors"];
+  const randomIndex = Math.floor(Math.random() * choices.length);
+  const computerSelection = choices[randomIndex];
 
-    if ((choice == "rock") || (choice == "paper") || (choice == "scissors")){
-        return choice ;
-    } else{
-        return "Invalid Input"; 
-    }
+  // Call the function to clear any previous selection
+  clearComputerSelection();
+
+  // Find the image element that matches the computer's choice
+  const computerImage = document.querySelector(`#c-${computerSelection}`);
+
+  // Add the 'selected' class to highlight the choice
+  if (computerImage) {
+    computerImage.classList.add("selected");
+  }
+
+  return computerSelection;
 }
 
-//game logic and winner
-function playRound(humanChoice, computerChoice){
-    //create an object with winning condition given humanChoice
-    const winningConditions = {
-        rock: "scissors",
-        paper: "rock",
-        scissors: "paper"
-    };
+//GAME LOGIC
+// Function to get human choice is not needed
+// as it is handled by the event listener in the playGame function
+function playRound(humanChoice, computerChoice) {
+  const winningConditions = {
+    rock: "scissors",
+    paper: "rock",
+    scissors: "paper",
+  };
 
-    if (humanChoice === computerChoice) {
-        return "t";
-     } else if (winningConditions[humanChoice] === computerChoice) {
-      return "h"
-    } else {
-        return "c";
-    }
+  if (humanChoice === computerChoice) {
+    return "t"; // Tie
+  } else if (winningConditions[humanChoice] === computerChoice) {
+    return "h"; // Human wins
+  } else {
+    return "c"; // Computer wins
+  }
 }
 
-//full game
-function playGame(){
-    let humanScore = 0;
-    let computerScore = 0;
+//GET CHOICES
+//Human Border
+// Get all human choice images
+const humanChoiceImages = document.querySelectorAll(".h-container img");
 
-    let humanChoice;
-    let computerChoice;
-    let winner;
-    for (let i = 0; i < 5; i++) {
-        humanChoice = getHumanChoice();
-        computerChoice = getComputerChoice();
-
-        winner = playRound(humanChoice,computerChoice)
-
-        if (winner == "c"){
-            computerScore += 1;
-           
-        } else if (winner == "h"){
-            humanScore += 1;
-        } else {
-            humanScore += 0.5;
-            computerScore += 0.5;
-        }
-    }
-
-    alert(`Final Score Human: ${humanScore} vs ${computerScore} Computer`);
-
+// This function removes the 'selected' class from all human images
+function clearHumanSelection() {
+  humanChoiceImages.forEach((img) => {
+    img.classList.remove("selected");
+  });
 }
 
+const scoreElement = document.querySelector(".game h2");
+const humanContainer = document.querySelector(".h-container");
+const startButton = document.querySelector(".game button");
+const TIMERDURATION = 1000;
 
-const startButton = document.querySelector('.game ');
+// This function will run a single round of the game
+function playGame() {
+  let humanScore = 0;
+  let computerScore = 0;
 
-startButton.addEventListener('click', () => {
-    alert("Game is about to start, this is a best of 5! \nPlease click on the image to make your choice");
+  const humanChoices = {
+    "h-rock": "rock",
+    "h-paper": "paper",
+    "h-scissors": "scissors",
+  };
+
+  humanContainer.addEventListener("click", (e) => {
+    // Prevent the code from running if the game is already over
+    if (humanScore >= 5 || computerScore >= 5) {
+      return;
+    }
+
+    const clickedImage = e.target;
+    const imageId = clickedImage.id;
+    console.log(clickedImage);
+
+    // Ensure a valid image was clicked
+    if (humanChoices[imageId]) {
+      //clear previous selections's border and add new one
+      clearHumanSelection();
+      clickedImage.classList.add("selected");
+
+      const humanChoice = humanChoices[imageId];
+      const computerChoice = getComputerChoice();
+
+      const winner = playRound(humanChoice, computerChoice);
+
+      if (winner === "c") {
+        computerScore++;
+      } else if (winner === "h") {
+        humanScore++;
+      } else {
+        humanScore += 0.5;
+        computerScore += 0.5;
+      }
+
+      // Remove the highlight after the game is over
+      setTimeout(() => {
+        clearHumanSelection();
+        clearComputerSelection();
+      }, TIMERDURATION);
+
+      // Update the score display
+      scoreElement.textContent = `Human: ${humanScore} | Computer: ${computerScore}`;
+
+      // Check for a winner after each round
+      if (humanScore >= 5) {
+        scoreElement.textContent = `You win the game! Final Score: Human: ${humanScore} vs Computer: ${computerScore}\nPress button to restart :)`;
+        // Remove the highlight after the game is over
+        setTimeout(() => {
+          clearHumanSelection();
+          clearComputerSelection();
+        }, TIMERDURATION);
+        return;
+      } else if (computerScore >= 5) {
+        scoreElement.textContent = `The computer wins! Final Score: Human: ${humanScore} vs Computer: ${computerScore}\nPress button to restart :)`;
+        // Remove the highlight after the game is over
+        setTimeout(() => {
+          clearHumanSelection();
+          clearComputerSelection();
+        }, TIMERDURATION);
+        return;
+      }
+    }
+  });
+}
+
+startButton.addEventListener("click", () => {
+  alert(
+    "Game is about to start, this is a best of 5! \nPlease click on the image to make your choice"
+  );
+  // Reset scores when a new game starts
+  humanScore = 0;
+  computerScore = 0;
+  scoreElement.textContent = `Please click on the image to make your choice`;
+
+  // Call playGame to set up the event listeners
+  playGame();
 });
-
-
-playGame();
